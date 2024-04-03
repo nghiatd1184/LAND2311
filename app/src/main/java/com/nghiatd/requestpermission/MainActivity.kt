@@ -3,7 +3,6 @@ package com.nghiatd.requestpermission
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             if (isGranted(permissions)) {
                 openCamera()
             } else {
-                Toast.makeText(this@MainActivity, "Ban khong cap du quyen!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Permission Denied!", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -67,17 +66,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    @Suppress("DEPRECATION")
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, 1001)
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode==1001 && resultCode == RESULT_OK) {
-            mBinding.img.setImageURI(data?.data)
+            val uri = intent?.data
+            Toast.makeText(this@MainActivity,"$uri",Toast.LENGTH_SHORT).show()
+            mBinding.img.setImageURI(intent?.data)
         }
     }
 
